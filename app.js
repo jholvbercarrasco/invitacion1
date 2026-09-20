@@ -33,39 +33,34 @@ function setMusicState(isPlaying) {
   elements.musicLabel.textContent = isPlaying ? "Pausar" : "Música";
 }
 
-let musicStartPrepared = false;
+let musicHasStarted = false;
 
 async function prepareMusicStart() {
-  if (musicStartPrepared) return;
+  if (musicHasStarted) return;
 
-  const seekToMusic = () => {
-    try {
-      elements.music.currentTime = MUSIC_START_SECONDS;
-      musicStartPrepared = true;
-    } catch {
-      // El navegador volverá a intentarlo al cargar los metadatos.
-    }
-  };
-
-  if (elements.music.readyState >= 1) {
-    seekToMusic();
-    return;
+  if (elements.music.readyState < 1) {
+    await new Promise((resolve) => {
+      elements.music.addEventListener("loadedmetadata", resolve, { once: true });
+    });
   }
 
-  await new Promise((resolve) => {
-    elements.music.addEventListener("loadedmetadata", () => {
-      seekToMusic();
-      resolve();
-    }, { once: true });
-  });
+  elements.music.currentTime = MUSIC_START_SECONDS;
 }
 
 async function playMusic() {
   try {
     await prepareMusicStart();
+
     await elements.music.play();
+
+    // Solo lo marcamos como iniciado cuando REALMENTE logró reproducirse
+    musicHasStarted = true;
+
     setMusicState(true);
   } catch {
+    // Si el navegador bloquea autoplay,
+    // queda en false para volver a posicionarlo en la primera interacción.
+    musicHasStarted = false;
     setMusicState(false);
   }
 }
