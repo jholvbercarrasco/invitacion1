@@ -3,7 +3,7 @@ const CONFIG = {
   eventDate: "2026-11-14T11:30:00-05:00",
 };
 
-const MUSIC_START_SECONDS = 19;
+const MUSIC_START_SECONDS = 8;
 
 const state = {
   invitation: null,
@@ -33,34 +33,39 @@ function setMusicState(isPlaying) {
   elements.musicLabel.textContent = isPlaying ? "Pausar" : "Música";
 }
 
-let musicHasStarted = false;
+let musicStartPrepared = false;
 
 async function prepareMusicStart() {
-  if (musicHasStarted) return;
+  if (musicStartPrepared) return;
 
-  if (elements.music.readyState < 1) {
-    await new Promise((resolve) => {
-      elements.music.addEventListener("loadedmetadata", resolve, { once: true });
-    });
+  const seekToMusic = () => {
+    try {
+      elements.music.currentTime = MUSIC_START_SECONDS;
+      musicStartPrepared = true;
+    } catch {
+      // El navegador volverá a intentarlo al cargar los metadatos.
+    }
+  };
+
+  if (elements.music.readyState >= 1) {
+    seekToMusic();
+    return;
   }
 
-  elements.music.currentTime = MUSIC_START_SECONDS;
+  await new Promise((resolve) => {
+    elements.music.addEventListener("loadedmetadata", () => {
+      seekToMusic();
+      resolve();
+    }, { once: true });
+  });
 }
 
 async function playMusic() {
   try {
     await prepareMusicStart();
-
     await elements.music.play();
-
-    // Solo lo marcamos como iniciado cuando REALMENTE logró reproducirse
-    musicHasStarted = true;
-
     setMusicState(true);
   } catch {
-    // Si el navegador bloquea autoplay,
-    // queda en false para volver a posicionarlo en la primera interacción.
-    musicHasStarted = false;
     setMusicState(false);
   }
 }
@@ -76,9 +81,10 @@ elements.musicControl.addEventListener("click", async () => {
 elements.music.addEventListener("play", () => setMusicState(true));
 elements.music.addEventListener("pause", () => setMusicState(false));
 elements.music.addEventListener("ended", () => {
-  musicHasStarted = false;
+  elements.music.currentTime = MUSIC_START_SECONDS;
   void playMusic();
 });
+void playMusic();
 
 const startMusicOnFirstInteraction = async () => {
   if (elements.music.paused) await playMusic();
