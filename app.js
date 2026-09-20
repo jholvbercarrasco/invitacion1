@@ -3,7 +3,7 @@ const CONFIG = {
   eventDate: "2026-11-14T11:30:00-05:00",
 };
 
-const MUSIC_START_SECONDS = 12;
+const MUSIC_START_SECONDS = 8;
 
 const state = {
   invitation: null,
@@ -76,10 +76,9 @@ elements.musicControl.addEventListener("click", async () => {
 elements.music.addEventListener("play", () => setMusicState(true));
 elements.music.addEventListener("pause", () => setMusicState(false));
 elements.music.addEventListener("ended", () => {
-  elements.music.currentTime = MUSIC_START_SECONDS;
+  musicHasStarted = false;
   void playMusic();
 });
-void playMusic();
 
 const startMusicOnFirstInteraction = async () => {
   if (elements.music.paused) await playMusic();
