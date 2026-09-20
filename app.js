@@ -3,7 +3,7 @@ const CONFIG = {
   eventDate: "2026-11-14T11:30:00-05:00",
 };
 
-const MUSIC_START_SECONDS = 8;
+const MUSIC_START_SECONDS = 18;
 
 const state = {
   invitation: null,
