@@ -744,7 +744,7 @@ img { display: block; max-width: 100%; }
 .gift-accounts {
   position: absolute;
   left: 50%;
-  bottom: 9%;
+  bottom: 25%;
   transform: translateX(-50%);
   z-index: 20;
 
@@ -773,6 +773,7 @@ img { display: block; max-width: 100%; }
 }
 
 .account-number {
+  font-size: 15px;
   letter-spacing: 0.04em;
 }
 
@@ -782,7 +783,7 @@ img { display: block; max-width: 100%; }
   background: transparent;
   color: #f7f3e9;
 
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1;
 
   padding: 3px 5px;
