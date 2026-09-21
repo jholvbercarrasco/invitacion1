@@ -345,6 +345,31 @@ async function registerWebMcpTools() {
   } catch {
     // Browsers without WebMCP continue with the visible form.
   }
+  const copyButtons = document.querySelectorAll(".copy-button");
+const copyFeedback = document.getElementById("copyFeedback");
+
+copyButtons.forEach((button) => {
+  button.addEventListener("click", async () => {
+    const value = button.dataset.copy;
+
+    try {
+      await navigator.clipboard.writeText(value);
+
+      const original = button.textContent;
+      button.textContent = "✓";
+
+      copyFeedback.textContent = "Copiado";
+
+      setTimeout(() => {
+        button.textContent = original;
+        copyFeedback.textContent = "";
+      }, 1500);
+
+    } catch {
+      copyFeedback.textContent = "Mantén presionado el número para copiar.";
+    }
+  });
+});
 }
 
 await loadInvitation();
