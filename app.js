@@ -345,32 +345,64 @@ async function registerWebMcpTools() {
   } catch {
     // Browsers without WebMCP continue with the visible form.
   }
-  const copyButtons = document.querySelectorAll(".copy-button");
+}
 const copyFeedback = document.getElementById("copyFeedback");
 
-copyButtons.forEach((button) => {
-  button.addEventListener("click", async () => {
-    const value = button.dataset.copy;
-
-    try {
+async function copyToClipboard(value) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(value);
-
-      const original = button.textContent;
-      button.textContent = "✓";
-
-      copyFeedback.textContent = "Copiado";
-
-      setTimeout(() => {
-        button.textContent = original;
-        copyFeedback.textContent = "";
-      }, 1500);
-
-    } catch {
-      copyFeedback.textContent = "Mantén presionado el número para copiar.";
+      return true;
     }
-  });
-});
+
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    const success = document.execCommand("copy");
+    textarea.remove();
+
+    return success;
+  } catch {
+    return false;
+  }
 }
 
+document.addEventListener("click", async (event) => {
+  const button = event.target.closest(".copy-button");
+
+  if (!button) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const value = button.dataset.copy;
+  const original = button.textContent;
+
+  const success = await copyToClipboard(value);
+
+  if (success) {
+    button.textContent = "✓";
+
+    if (copyFeedback) {
+      copyFeedback.textContent = "Copiado";
+    }
+
+    setTimeout(() => {
+      button.textContent = original;
+
+      if (copyFeedback) {
+        copyFeedback.textContent = "";
+      }
+    }, 1500);
+  } else if (copyFeedback) {
+    copyFeedback.textContent = "No se pudo copiar";
+  }
+});
 await loadInvitation();
 await registerWebMcpTools();
