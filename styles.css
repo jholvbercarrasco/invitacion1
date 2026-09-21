@@ -753,9 +753,10 @@ img { display: block; max-width: 100%; }
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2px;
 
   color: #f7f3e9;
+  pointer-events: auto;
 }
 
 .account-row {
@@ -763,9 +764,9 @@ img { display: block; max-width: 100%; }
   align-items: center;
   justify-content: center;
   gap: 7px;
-
-  font-size: 14px;
-  line-height: 1.3;
+  margin-top: -4px;
+  font-size: 15px;
+  line-height: 0.9
 }
 
 .account-label {
@@ -790,6 +791,10 @@ img { display: block; max-width: 100%; }
   cursor: pointer;
 
   opacity: 0.85;
+  position: relative;
+  z-index: 30;
+  pointer-events: auto;
+  touch-action: manipulation;
 }
 
 .copy-button:active {
