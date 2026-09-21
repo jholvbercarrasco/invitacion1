@@ -741,3 +741,64 @@ img { display: block; max-width: 100%; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .reveal { opacity: 1; transform: none; }
 }
+.gift-accounts {
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  transform: translateX(-50%);
+  z-index: 20;
+
+  width: 82%;
+  max-width: 380px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  color: #f7f3e9;
+}
+
+.account-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.account-label {
+  font-weight: 500;
+}
+
+.account-number {
+  letter-spacing: 0.04em;
+}
+
+.copy-button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #f7f3e9;
+
+  font-size: 19px;
+  line-height: 1;
+
+  padding: 3px 5px;
+  cursor: pointer;
+
+  opacity: 0.85;
+}
+
+.copy-button:active {
+  transform: scale(0.92);
+}
+
+.copy-feedback {
+  min-height: 16px;
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: 11px;
+  opacity: 0.75;
+}
